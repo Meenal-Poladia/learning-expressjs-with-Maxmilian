@@ -5,7 +5,7 @@ exports.getProducts = (req, res, next) => {
         res.render('shop/product-list', {
             prods: products,
             pageTitle: 'Shop',
-            path: '/',
+            path: '/products',
             hasProducts: products.length > 0,
             activeShop: true,
             productCSS: true
@@ -18,7 +18,7 @@ exports.getIndex = (req, res, next) => {
         res.render('shop/index', {
             prods: products,
             pageTitle: 'All products',
-            path: '/products',
+            path: '/',
         });
     });
 }
