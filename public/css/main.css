@@ -33,6 +33,11 @@ main {
     padding: 0;
 }
 
+.centered {
+    text-align: center;
+
+}
+
 .main-header__item a {
     text-decoration: none;
     color: black;
