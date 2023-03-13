@@ -10,15 +10,19 @@ const p = path.join(
 const getProductsFromFile = (callback) => {
     fs.readFile(p, (error, fileContent) => {
         if (error) callback([])
-        else callback(JSON.parse(fileContent));
+        else {
+            callback(JSON.parse(fileContent));
+        }
     })
 }
 
 module.exports = class Product {
-    constructor(title) {
+    constructor(title, imageUrl, description, price) {
         this.title = title;
+        this.imageUrl = imageUrl;
+        this.description = description;
+        this.price = price;
     }
-
     save() {
         getProductsFromFile(products => {
             products.push(this);
