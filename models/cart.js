@@ -8,39 +8,57 @@ const pathLocation = path.join(
 );
 
 module.exports = class Cart {
-    static addProduct(id, productPrice){
-        //Fetch previous Cart
-        fs.readFile(pathLocation, (error, fileContent) => {
-            let cart = {
-                products: [],
-                totalPrice: 0,
-            }
-            if(!error) cart =  JSON.parse(fileContent);
-            //Analyse the cart => Find existing product
-            console.log(cart.products);
-            const existingProductIndex = cart.products.findIndex(product => product.id === id);
-            const existingProduct = cart.products[existingProductIndex];
-            let updatedProduct;
-            if (existingProduct) {
-                updatedProduct = {...existingProduct};
-                updatedProduct.quantity = updatedProduct.quantity + 1;
-                cart.products = [...cart.products];
-                console.log(`Updated product`, updatedProduct);
-                cart.products[existingProductIndex] = updatedProduct;
-            }
-            else {
-                updatedProduct = {
-                    id: id,
-                    quantity: 1
+    static deleteProduct(id, price) {
+        let cart;
+        fs.readFile(p, (error, fileContent) => {
+            cart = JSON.parse(fileContent);
+            if (error) return;
+            const updatedCart = {...cart};
+            const product = updatedCart.products.findIndex(product => product.id === id);
+            const productQuantity = product.quantity;
+            updatedCart.products = updatedCart.products.filter(product => product.id !== id)
+            updatedCart.totalPrice = cart.totalPrice - product.price * productQuantity;
 
-                }
-                cart.products = [...cart.products, updatedProduct];
-            }
-            console.log()
-            cart.totalPrice = cart.totalPrice + (+productPrice);
-            fs.writeFile(pathLocation, JSON.stringify(cart), error => {
+            fs.writeFile(pathLocation, JSON.stringify(updatedCart), error => {
                 console.log(error);
             })
         })
+
     }
+
+    static addProduct(id, productPrice){
+    //Fetch previous Cart
+    fs.readFile(pathLocation, (error, fileContent) => {
+        let cart = {
+            products: [],
+            totalPrice: 0,
+        }
+        if(!error) cart =  JSON.parse(fileContent);
+        //Analyse the cart => Find existing product
+        console.log(cart.products);
+        const existingProductIndex = cart.products.findIndex(product => product.id === id);
+        const existingProduct = cart.products[existingProductIndex];
+        let updatedProduct;
+        if (existingProduct) {
+            updatedProduct = {...existingProduct};
+            updatedProduct.quantity = updatedProduct.quantity + 1;
+            cart.products = [...cart.products];
+            console.log(`Updated product`, updatedProduct);
+            cart.products[existingProductIndex] = updatedProduct;
+        }
+        else {
+            updatedProduct = {
+                id: id,
+                quantity: 1
+
+            }
+            cart.products = [...cart.products, updatedProduct];
+        }
+        console.log()
+        cart.totalPrice = cart.totalPrice + (+productPrice);
+        fs.writeFile(pathLocation, JSON.stringify(cart), error => {
+            console.log(error);
+        })
+    })
+}
 }
