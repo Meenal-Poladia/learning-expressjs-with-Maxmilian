@@ -10,20 +10,19 @@ const pathLocation = path.join(
 module.exports = class Cart {
     static deleteProduct(id, price) {
         let cart;
-        fs.readFile(p, (error, fileContent) => {
+        fs.readFile(pathLocation, (error, fileContent) => {
             cart = JSON.parse(fileContent);
             if (error) return;
-            const updatedCart = {...cart};
+            let updatedCart = {...cart};
             const product = updatedCart.products.findIndex(product => product.id === id);
+            if (!product) return;
             const productQuantity = product.quantity;
             updatedCart.products = updatedCart.products.filter(product => product.id !== id)
             updatedCart.totalPrice = cart.totalPrice - product.price * productQuantity;
-
             fs.writeFile(pathLocation, JSON.stringify(updatedCart), error => {
                 console.log(error);
             })
         })
-
     }
 
     static addProduct(id, productPrice){
@@ -35,7 +34,6 @@ module.exports = class Cart {
             }
             if(!error) cart =  JSON.parse(fileContent);
             //Analyse the cart => Find existing product
-            console.log(cart.products);
             const existingProductIndex = cart.products.findIndex(product => product.id === id);
             const existingProduct = cart.products[existingProductIndex];
             let updatedProduct;
@@ -54,7 +52,6 @@ module.exports = class Cart {
                 }
                 cart.products = [...cart.products, updatedProduct];
             }
-            console.log()
             cart.totalPrice = cart.totalPrice + (+productPrice);
             fs.writeFile(pathLocation, JSON.stringify(cart), error => {
                 console.log(error);
