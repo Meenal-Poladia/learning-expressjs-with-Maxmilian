@@ -41,7 +41,6 @@ module.exports = class Cart {
                 updatedProduct = {...existingProduct};
                 updatedProduct.quantity = updatedProduct.quantity + 1;
                 cart.products = [...cart.products];
-                console.log(`Updated product`, updatedProduct);
                 cart.products[existingProductIndex] = updatedProduct;
             }
             else {
