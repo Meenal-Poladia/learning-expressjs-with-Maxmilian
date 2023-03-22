@@ -17,6 +17,15 @@ const User = require("./models/user");
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(express.static(path.join(__dirname, "public")));
 
+app.use((request, response, next) => {
+    User.findByPk(1)
+        .then(user => {
+            request.user = user
+            next()
+        })
+        .catch(error => console.log(error))
+})
+
 app.use("/admin", adminRoutes);
 app.use(shopRoute);
 
@@ -34,9 +43,16 @@ Product.belongsTo(User, {
 })
 User.hasMany(Product);
 
-sequelize.sync({force: true})
+//This is run when we use the command npm start to start the development server.
+sequelize.sync()
     .then((result) => {
-        console.log(result);
+        return User.findByPk(1);
+    })
+    .then(user => {
+        if (!user) return User.create({name: "Max", email: "test@gmail.com"})
+        return user;
+    })
+    .then(user => {
         app.listen(3000);
     })
     .catch(error => console.log(error))
