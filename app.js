@@ -51,7 +51,7 @@ Cart.belongsToMany(Product, {through: CartItem});
 Product.belongsToMany(User, {through: CartItem});
 
 //This is run when we use the command npm start to start the development server.
-sequelize.sync()
+sequelize.sync({force: true})
     .then((result) => {
         return User.findByPk(1);
     })
@@ -60,7 +60,8 @@ sequelize.sync()
         return user;
     })
     .then(user => {
-        app.listen(3000);
+        return user.createCart();
     })
+    .then(() =>  app.listen(3000))
     .catch(error => console.log(error))
 
