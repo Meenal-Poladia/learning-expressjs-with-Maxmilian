@@ -47,11 +47,11 @@ Product.belongsTo(User, {
 User.hasMany(Product);
 User.hasOne(Cart);
 Cart.belongsTo(User);
-Cart.belongsToMany(Product, {through: CartItem});
-Product.belongsToMany(User, {through: CartItem});
+Cart.belongsToMany(Product, {through: { model: CartItem, unique: false } });
+Product.belongsToMany(User, {through: { model: CartItem, unique: false } });
 
 //This is run when we use the command npm start to start the development server.
-sequelize.sync()
+sequelize.sync({ force: true })
     .then((result) => {
         return User.findByPk(1);
     })
