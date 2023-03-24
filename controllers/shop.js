@@ -122,9 +122,13 @@ exports.getOrders = (req, res, next) => {
 }
 
 exports.postOrder = (req, res, next) => {
+    let fetchedCart;
     req.user
         .getCart()
-        .then(cart => cart.getProducts())
+        .then(cart => {
+            fetchedCart = cart
+            return cart.getProducts()
+        })
         .then(products => {
             return req.user.createOrder()
                 .then(order => {
@@ -134,6 +138,7 @@ exports.postOrder = (req, res, next) => {
                 })
                 .catch(error => console.log(error))
         })
-        .then(result => res.redirect("/orders"))
+        .then(() => fetchedCart.setProducts(null))
+        .then(() => res.redirect("/orders"))
         .catch(error => console.log(error))
 }
