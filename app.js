@@ -15,6 +15,8 @@ const Product = require("./models/product");
 const User = require("./models/user");
 const Cart = require("./models/cart");
 const CartItem = require("./models/cart-item");
+const Order = require("./models/order");
+const OrderItem = require("./models/order-item");
 
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(express.static(path.join(__dirname, "public")));
@@ -49,6 +51,9 @@ User.hasOne(Cart);
 Cart.belongsTo(User);
 Cart.belongsToMany(Product, {through: { model: CartItem, unique: false } });
 Product.belongsToMany(User, {through: { model: CartItem, unique: false } });
+Order.belongsTo(User);
+User.hasMany(Order);
+Order.belongsToMany(Product, {through: { model: OrderItem, unique: false }})
 
 //This is run when we use the command npm start to start the development server.
 sequelize.sync()
