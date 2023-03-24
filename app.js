@@ -53,7 +53,7 @@ Cart.belongsToMany(Product, {through: { model: CartItem, unique: false } });
 Product.belongsToMany(User, {through: { model: CartItem, unique: false } });
 Order.belongsTo(User);
 User.hasMany(Order);
-Order.belongsToMany(Product, {through: { model: OrderItem, unique: false }})
+Order.belongsToMany(Product, {through: { model: OrderItem }})
 
 //This is run when we use the command npm start to start the development server.
 sequelize.sync()

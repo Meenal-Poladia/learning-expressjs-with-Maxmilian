@@ -120,3 +120,20 @@ exports.getOrders = (req, res, next) => {
         pageTitle: "Your Orders"
     })
 }
+
+exports.postOrder = (req, res, next) => {
+    req.user
+        .getCart()
+        .then(cart => cart.getProducts())
+        .then(products => {
+            return req.user.createOrder()
+                .then(order => {
+                    return order.addProducts(products.map(product => {
+                        product.orderItem = {quantity: product.cartItem.quantity}
+                    }))
+                })
+                .catch(error => console.log(error))
+        })
+        .then(result => res.redirect("/orders"))
+        .catch(error => console.log(error))
+}
